@@ -22,14 +22,15 @@ public class OrderItemController {
     @GetMapping
     public List<OrderItemDTO> getAll() {
         return orderItemService.findAll().stream()
-                .map(item -> new OrderItemDTO(item.getItemId(), item.getProduct(), item.getQuantity(), item.getPrice()))
+                .map(item -> new OrderItemDTO(item.getId(), item.getProduct(), item.getQuantity()))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderItemDTO> getById(@PathVariable Long id) {
         return orderItemService.findById(id)
-                .map(item -> ResponseEntity.ok(new OrderItemDTO(item.getItemId(), item.getProduct(), item.getQuantity(), item.getPrice())))
+                .map(item -> ResponseEntity.ok(new OrderItemDTO(item.getId(), item.getProduct(),
+                        item.getQuantity())))
                 .orElse(ResponseEntity.notFound().build());
     }
 

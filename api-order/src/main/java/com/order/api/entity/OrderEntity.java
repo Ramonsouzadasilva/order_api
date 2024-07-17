@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "orders")
-@Entity //(name = "categorias")
+@Entity
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,3 +62,4 @@ public class OrderEntity {
         }
     }
 }
+

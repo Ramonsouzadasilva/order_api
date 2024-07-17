@@ -34,10 +34,10 @@ public class OrderController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search")
-    public List<OrderDTO> getOrdersByProduct(@RequestParam("product") String productName) {
-        return orderService.findOrdersByProduct(productName);
-    }
+//    @GetMapping("/search")
+//    public List<OrderDTO> getOrdersByProduct(@RequestParam("product") String productName) {
+//        return orderService.findOrdersByProduct(productName);
+//    }
 
     @PostMapping
     public ResponseEntity<OrderDTO> create(@RequestBody OrderDTO orderDTO) {

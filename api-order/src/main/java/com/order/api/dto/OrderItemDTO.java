@@ -1,10 +1,11 @@
 package com.order.api.dto;
 
+import com.order.api.entity.Product;
+
 import java.math.BigDecimal;
 
 public record OrderItemDTO(
         Long id,
-        String product,
-        Integer quantity,
-        BigDecimal price
+        Product product,
+        Integer quantity
 ) {}
