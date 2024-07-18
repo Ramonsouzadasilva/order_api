@@ -1,9 +1,12 @@
 package com.order.api.controller;
 
-import com.order.api.dto.OrderDTO;
+
+import com.order.api.dto.request.OrderRequestDTO;
+import com.order.api.dto.response.OrderResponseDTO;
 import com.order.api.entity.OrderEntity;
 import com.order.api.entity.OrderItem;
 import com.order.api.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,49 +19,19 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    @Autowired
+    private OrderService orderService;
 
-    @GetMapping
-    public List<OrderDTO> getAll() {
-        return orderService.findAll();
+    @PostMapping
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        OrderResponseDTO createdOrder = orderService.createOrder(orderRequestDTO);
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getById(@PathVariable Long id) {
-        return orderService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-//    @GetMapping("/search")
-//    public List<OrderDTO> getOrdersByProduct(@RequestParam("product") String productName) {
-//        return orderService.findOrdersByProduct(productName);
-//    }
-
-    @PostMapping
-    public ResponseEntity<OrderDTO> create(@RequestBody OrderDTO orderDTO) {
-        orderService.save(orderDTO);
-//        return ResponseEntity.ok(orderDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
-        orderDTO = new OrderDTO(id, orderDTO.total(), orderDTO.items());  // Ensure ID consistency
-        orderService.update(orderDTO);
-        return ResponseEntity.ok(orderDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (orderService.findById(id).isPresent()) {
-            orderService.delete(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Long id) {
+        OrderResponseDTO order = orderService.getOrderById(id);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }

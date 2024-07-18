@@ -33,10 +33,10 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public OrderItem(OrderEntity order, Product product, Integer quantity) {
-        this.order = order;
+    public OrderItem( Product product, Integer quantity, OrderEntity order) {
         this.product = product;
         this.quantity = quantity;
+        this.order = order;
     }
 
 }

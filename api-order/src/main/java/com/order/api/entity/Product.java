@@ -43,4 +43,16 @@ public class Product {
     @Column(name = "product_code", nullable = false, length = 6 )
     private String productCode;
 
+    // Construtor sem o ID
+    public Product(String name, String description, String linkImage, BigDecimal price, Integer inventory, String brand, String category, String productCode) {
+        this.name = name;
+        this.description = description;
+        this.linkImage = linkImage;
+        this.price = price;
+        this.inventory = inventory;
+        this.brand = brand;
+        this.category = category;
+        this.productCode = productCode;
+    }
+
 }

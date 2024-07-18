@@ -1,8 +1,11 @@
 package com.order.api.service;
 
 
+import com.order.api.dto.response.OrderItemResponseDTO;
 import com.order.api.entity.OrderItem;
+import com.order.api.exceptions.ResourceNotFoundException;
 import com.order.api.repository.OrderItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,29 +13,14 @@ import java.util.Optional;
 
 @Service
 public class OrderItemService {
-    private final OrderItemRepository orderItemRepository;
 
-    public OrderItemService(OrderItemRepository orderItemRepository) {
-        this.orderItemRepository = orderItemRepository;
-    }
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
-    public List<OrderItem> findAll() {
-        return orderItemRepository.findAll();
-    }
-
-    public Optional<OrderItem> findById(Long id) {
-        return orderItemRepository.findById(id);
-    }
-
-    public void save(OrderItem orderItem) {
-        orderItemRepository.save(orderItem);
-    }
-
-    public void update(OrderItem orderItem) {
-        orderItemRepository.save(orderItem);
-    }
-
-    public void delete(Long id) {
-        orderItemRepository.deleteById(id);
+    public OrderItemResponseDTO getOrderItemById(Long id) {
+        OrderItem item = orderItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order item not found"));
+        return new OrderItemResponseDTO(item.getId(), item.getProduct().getId(),
+                item.getProduct().getName(), item.getProduct().getPrice(), item.getQuantity());
     }
 }
