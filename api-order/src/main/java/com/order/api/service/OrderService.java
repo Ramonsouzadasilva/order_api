@@ -1,6 +1,9 @@
 package com.order.api.service;
 
 
+import com.order.api.auth.entity.User;
+import com.order.api.auth.repository.UserRepository;
+import com.order.api.auth.service.AuthorizationService;
 import com.order.api.dto.request.OrderItemRequestDTO;
 import com.order.api.dto.request.OrderRequestDTO;
 import com.order.api.dto.response.OrderItemResponseDTO;
@@ -14,6 +17,8 @@ import com.order.api.repository.OrderRepository;
 import com.order.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,12 +38,20 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userRepository.findByLogin(username);
+
         List<OrderItem> items = new ArrayList<>();
+
         BigDecimal total = BigDecimal.ZERO;
         int itemTotal = 0;
 
         OrderEntity order = new OrderEntity();
+        order.setUser(user);
 
         for (OrderItemRequestDTO itemDTO : orderRequestDTO.items()) {
             if (itemDTO.quantity() <= 0) {
@@ -67,7 +80,9 @@ public class OrderService {
     }
 
     public List<OrderResponseDTO> getAllOrders() {
-        List<OrderEntity> orders = orderRepository.findAll();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userRepository.findByLogin(username);
+        List<OrderEntity> orders = orderRepository.findByUser(user);
         return orders.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
@@ -122,3 +137,4 @@ public class OrderService {
         return new OrderResponseDTO(order.getOrderId(), order.getTotal(), order.getItemTotal(), itemDTOs);
     }
 }
+
