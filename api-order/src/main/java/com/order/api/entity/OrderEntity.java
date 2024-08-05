@@ -1,7 +1,6 @@
 package com.order.api.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,7 +13,11 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "total")
+
+    @Column(name = "item_total", nullable = false)
+    private Integer itemTotal;
+
+    @Column(name = "total", nullable = false)
     private BigDecimal total;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -25,9 +28,10 @@ public class OrderEntity {
     }
 
     // Construtor com dados
-    public OrderEntity(BigDecimal total, List<OrderItem> items) {
+    public OrderEntity(BigDecimal total, Integer itemTotal, List<OrderItem> items) {
         this.total = total;
         this.items = items;
+        this.itemTotal = itemTotal;
         // Configurar o relacionamento bidirecional
         setItems(items);
     }
@@ -60,6 +64,14 @@ public class OrderEntity {
             this.items.addAll(items);
             this.items.forEach(item -> item.setOrder(this));
         }
+    }
+
+    public Integer getItemTotal() {
+        return itemTotal;
+    }
+
+    public void setItemTotal(Integer itemTotal) {
+        this.itemTotal = itemTotal;
     }
 }
 

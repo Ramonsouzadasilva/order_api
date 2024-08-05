@@ -35,12 +35,14 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         return convertToResponseDTO(product);
     }
+
     public List<ProductResponseDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
+
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));

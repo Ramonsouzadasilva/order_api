@@ -21,6 +21,9 @@ public class OrderItemService {
         OrderItem item = orderItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order item not found"));
         return new OrderItemResponseDTO(item.getId(), item.getProduct().getId(),
-                item.getProduct().getName(), item.getProduct().getPrice(), item.getQuantity());
+                item.getProduct().getName(),item.getProduct().getDescription(),
+                item.getProduct().getBrand(), item.getProduct().getCategory(),
+                item.getProduct().getPrice(), item.getQuantity());
     }
 }
+

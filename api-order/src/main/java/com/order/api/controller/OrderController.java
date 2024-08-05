@@ -34,4 +34,22 @@ public class OrderController {
         OrderResponseDTO order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
+        List<OrderResponseDTO> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long id, @RequestBody OrderRequestDTO orderRequestDTO) {
+        OrderResponseDTO updatedOrder = orderService.updateOrder(id, orderRequestDTO);
+        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
